@@ -1,0 +1,499 @@
+{
+  "version": "1.0.0",
+  "title": "Digital Adaptive Autism Spectrum Screening (DAASS)",
+  "created_utc": "2025-11-09T01:33:08.550431Z",
+  "metadata": {
+    "purpose": "Self-administered ASD-trait screening with anti-gaming architecture",
+    "note": "Screening, not diagnostic. Includes branching, reverse-coding, cross-checks, and integrity penalties.",
+    "domains": [
+      "attention_focus",
+      "communication_context",
+      "sensory",
+      "social_emotional",
+      "routines"
+    ],
+    "scale": {
+      "min": 1,
+      "max": 5,
+      "labels": {
+        "1": "Strongly disagree",
+        "2": "Disagree",
+        "3": "Neutral",
+        "4": "Agree",
+        "5": "Strongly agree"
+      }
+    },
+    "admin": {
+      "randomize_order": true,
+      "record_response_time_ms": true,
+      "min_read_time_ms": 1200,
+      "max_completion_time_min": 25
+    }
+  },
+  "items": [
+    {
+      "id": "Q1",
+      "text": "When I’m deeply interested in something, interruptions feel physically uncomfortable.",
+      "domain": "attention_focus",
+      "reverse": false
+    },
+    {
+      "id": "Q2",
+      "text": "I find multitasking easy and energizing.",
+      "domain": "attention_focus",
+      "reverse": true
+    },
+    {
+      "id": "Q3",
+      "text": "My sense of time disappears when I’m engaged in a personal project.",
+      "domain": "attention_focus",
+      "reverse": false
+    },
+    {
+      "id": "Q4",
+      "text": "If someone changes a plan unexpectedly, I adapt right away without frustration.",
+      "domain": "attention_focus",
+      "reverse": true
+    },
+    {
+      "id": "Q5",
+      "text": "I often detect small errors in text, design, or speech that others overlook.",
+      "domain": "attention_focus",
+      "reverse": false
+    },
+    {
+      "id": "Q6",
+      "text": "I often need to think for several seconds before knowing how to respond in conversation.",
+      "domain": "communication_context",
+      "reverse": false
+    },
+    {
+      "id": "Q7",
+      "text": "I naturally read between the lines when people are being indirect.",
+      "domain": "communication_context",
+      "reverse": true
+    },
+    {
+      "id": "Q8",
+      "text": "I sometimes realize too late that my words sounded blunt.",
+      "domain": "communication_context",
+      "reverse": false
+    },
+    {
+      "id": "Q9",
+      "text": "I find it hard to tell if someone is joking unless they say so.",
+      "domain": "communication_context",
+      "reverse": false
+    },
+    {
+      "id": "Q10",
+      "text": "I tend to interpret instructions literally unless told otherwise.",
+      "domain": "communication_context",
+      "reverse": false
+    },
+    {
+      "id": "Q11",
+      "text": "I’m easily distracted by background noises like ticking clocks or humming lights.",
+      "domain": "sensory",
+      "reverse": false
+    },
+    {
+      "id": "Q12",
+      "text": "Certain textures, fabrics, or food consistencies make me uneasy.",
+      "domain": "sensory",
+      "reverse": false
+    },
+    {
+      "id": "Q13",
+      "text": "My comfort level isn’t affected by sensory factors like noise or brightness.",
+      "domain": "sensory",
+      "reverse": true
+    },
+    {
+      "id": "Q14",
+      "text": "I prefer calm, uncluttered spaces to feel focused.",
+      "domain": "sensory",
+      "reverse": false
+    },
+    {
+      "id": "Q15",
+      "text": "I notice patterns in sound or rhythm that others miss.",
+      "domain": "sensory",
+      "reverse": false
+    },
+    {
+      "id": "Q16",
+      "text": "I often feel drained after social gatherings, even enjoyable ones.",
+      "domain": "social_emotional",
+      "reverse": false
+    },
+    {
+      "id": "Q17",
+      "text": "I draw energy from being around groups of people.",
+      "domain": "social_emotional",
+      "reverse": true
+    },
+    {
+      "id": "Q18",
+      "text": "I sometimes have to remind myself to make eye contact when speaking.",
+      "domain": "social_emotional",
+      "reverse": false
+    },
+    {
+      "id": "Q19",
+      "text": "People sometimes describe me as serious or overly direct.",
+      "domain": "social_emotional",
+      "reverse": false
+    },
+    {
+      "id": "Q20",
+      "text": "I need more time than most to emotionally process upsetting events.",
+      "domain": "social_emotional",
+      "reverse": false
+    },
+    {
+      "id": "Q21",
+      "text": "I prefer to keep my daily schedule consistent.",
+      "domain": "routines",
+      "reverse": false
+    },
+    {
+      "id": "Q22",
+      "text": "Unexpected disruptions can affect my mood for hours.",
+      "domain": "routines",
+      "reverse": false
+    },
+    {
+      "id": "Q23",
+      "text": "I find repetitive actions calming or satisfying.",
+      "domain": "routines",
+      "reverse": false
+    },
+    {
+      "id": "Q24",
+      "text": "I enjoy spontaneous, unplanned experiences.",
+      "domain": "routines",
+      "reverse": true
+    },
+    {
+      "id": "Q25",
+      "text": "When stressed, I return to familiar routines or interests for comfort.",
+      "domain": "routines",
+      "reverse": false
+    },
+    {
+      "id": "Q7a",
+      "text": "I usually perceive sarcasm even when it’s subtle.",
+      "domain": "communication_context",
+      "reverse": true,
+      "mirror_of": "Q7"
+    },
+    {
+      "id": "Q1a",
+      "text": "I feel physically agitated when interrupted during deep focus.",
+      "domain": "attention_focus",
+      "reverse": false,
+      "mirror_of": "Q1"
+    },
+    {
+      "id": "Q11a",
+      "text": "Sensory discomforts (noise, light, texture) often interfere with my concentration.",
+      "domain": "sensory",
+      "reverse": false,
+      "mirror_of": "Q11"
+    },
+    {
+      "id": "Q22a",
+      "text": "Unexpected changes to routines feel tense or disorienting.",
+      "domain": "routines",
+      "reverse": false,
+      "mirror_of": "Q22"
+    },
+    {
+      "id": "Q26",
+      "text": "I never get frustrated by other people’s behavior.",
+      "domain": "integrity",
+      "reverse": true
+    },
+    {
+      "id": "Q27",
+      "text": "I am equally comfortable in every social situation.",
+      "domain": "integrity",
+      "reverse": true
+    },
+    {
+      "id": "Q28",
+      "text": "I always know exactly what others feel just by looking at them.",
+      "domain": "integrity",
+      "reverse": true
+    },
+    {
+      "id": "Q29",
+      "text": "I adapt instantly to every change.",
+      "domain": "integrity",
+      "reverse": true
+    },
+    {
+      "id": "Q30",
+      "text": "I have never misunderstood anyone’s tone.",
+      "domain": "integrity",
+      "reverse": true
+    }
+  ],
+  "branching": [
+    {
+      "when": {
+        "sum_at_least": {
+          "items": [
+            "Q1",
+            "Q3"
+          ],
+          "threshold": 8
+        }
+      },
+      "then_show": [
+        "Q1a"
+      ]
+    },
+    {
+      "when": {
+        "sum_at_least": {
+          "items": [
+            "Q11",
+            "Q12"
+          ],
+          "threshold": 8
+        }
+      },
+      "then_show": [
+        "Q11a"
+      ]
+    },
+    {
+      "when": {
+        "sum_at_least": {
+          "items": [
+            "Q21",
+            "Q22"
+          ],
+          "threshold": 8
+        }
+      },
+      "then_show": [
+        "Q22a"
+      ]
+    },
+    {
+      "when": {
+        "answered": [
+          "Q7"
+        ]
+      },
+      "then_show": [
+        "Q7a"
+      ]
+    }
+  ],
+  "scoring": {
+    "weights": {
+      "attention_focus": 1.0,
+      "communication_context": 1.0,
+      "sensory": 1.0,
+      "social_emotional": 1.0,
+      "routines": 1.0
+    },
+    "reverse_rule": "score = 6 - response",
+    "domain_mapping": {
+      "attention_focus": [
+        "Q1",
+        "Q2",
+        "Q3",
+        "Q4",
+        "Q5",
+        "Q1a"
+      ],
+      "communication_context": [
+        "Q6",
+        "Q7",
+        "Q8",
+        "Q9",
+        "Q10",
+        "Q7a"
+      ],
+      "sensory": [
+        "Q11",
+        "Q12",
+        "Q13",
+        "Q14",
+        "Q15",
+        "Q11a"
+      ],
+      "social_emotional": [
+        "Q16",
+        "Q17",
+        "Q18",
+        "Q19",
+        "Q20"
+      ],
+      "routines": [
+        "Q21",
+        "Q22",
+        "Q23",
+        "Q24",
+        "Q25",
+        "Q22a"
+      ]
+    },
+    "integrity_items": [
+      "Q26",
+      "Q27",
+      "Q28",
+      "Q29",
+      "Q30"
+    ],
+    "integrity_logic": {
+      "penalize_extremes": {
+        "thresholds": {
+          "min": 1,
+          "max": 5
+        },
+        "extreme_values": [
+          1,
+          5
+        ],
+        "penalty_per_extreme": 0.02
+      },
+      "time_based_flags": {
+        "min_ms_per_item": 1000,
+        "rapid_threshold_pct": 0.25,
+        "penalty": 0.05
+      }
+    },
+    "consistency_checks": {
+      "mirrors": [
+        [
+          "Q7",
+          "Q7a"
+        ],
+        [
+          "Q1",
+          "Q1a"
+        ],
+        [
+          "Q11",
+          "Q11a"
+        ],
+        [
+          "Q22",
+          "Q22a"
+        ],
+        [
+          "Q16",
+          "Q17"
+        ]
+      ],
+      "allowable_deviation": 2,
+      "penalty_per_violation": 0.03
+    },
+    "computation": {
+      "domain_max": 20,
+      "normalize_by_items_answered": true,
+      "total_index_max": 100,
+      "confidence_levels": [
+        {
+          "min_conf": 0.85,
+          "label": "High"
+        },
+        {
+          "min_conf": 0.65,
+          "label": "Moderate"
+        },
+        {
+          "min_conf": 0.0,
+          "label": "Low"
+        }
+      ]
+    },
+    "cutpoints": [
+      {
+        "label": "Low ASD-likelihood",
+        "range": [
+          0,
+          40
+        ]
+      },
+      {
+        "label": "Moderate ASD-likelihood",
+        "range": [
+          41,
+          70
+        ]
+      },
+      {
+        "label": "High ASD-likelihood",
+        "range": [
+          71,
+          100
+        ]
+      }
+    ]
+  },
+  "anti_gaming": {
+    "randomization": {
+      "item_order": true,
+      "block_randomization": true
+    },
+    "forced_choice": {
+      "enabled": true,
+      "pairs": [
+        [
+          "Q2",
+          "Q3"
+        ],
+        [
+          "Q7",
+          "Q10"
+        ],
+        [
+          "Q16",
+          "Q17"
+        ],
+        [
+          "Q21",
+          "Q24"
+        ]
+      ]
+    },
+    "response_time": {
+      "capture_ms": true,
+      "flag_fast_percentile": 10
+    },
+    "retake_variants": {
+      "forms": 4,
+      "semantic_variants": true
+    },
+    "progressive_disclosure": true
+  },
+  "data_fields": {
+    "capture": [
+      "item_id",
+      "response_value",
+      "response_time_ms",
+      "display_variant_id",
+      "device_type",
+      "ip_hash"
+    ],
+    "privacy": {
+      "pii": "not_collected",
+      "ip_hashing": "salted_sha256",
+      "retain_days": 365
+    }
+  },
+  "export": {
+    "format": [
+      "json",
+      "csv"
+    ],
+    "schema_version": "1.0.0"
+  }
+}
