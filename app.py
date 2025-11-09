@@ -12,7 +12,7 @@ def load_schema():
 
 schema = load_schema()
 
-CORE_IDS = [i["id"] for i in schema["items"] if i["id"][:2] == "Q" and i["domain"] in ["attention_focus","communication_context","sensory","social_emotional","routines"] and "mirror_of" not in i]
+CORE_IDS = [i["id"] for i in schema["items"] if i["id"].startswith("Q") and i["domain"] in ["attention_focus","communication_context","sensory","social_emotional","routines"] and "mirror_of" not in i]
 ADAPTIVE_IDS = [i["id"] for i in schema["items"] if i.get("mirror_of")]
 INTEGRITY_IDS = [i["id"] for i in schema["items"] if i["domain"] == "integrity"]
 
@@ -24,10 +24,10 @@ def init_state():
         random.seed()
         st.session_state.order_core = random.sample(CORE_IDS, k=len(CORE_IDS))
         st.session_state.order_integrity = random.sample(INTEGRITY_IDS, k=len(INTEGRITY_IDS))
-        st.session_state.order_adaptive = []  # filled after core
+        st.session_state.order_adaptive = []
         st.session_state.idx = 0
-        st.session_state.responses = {}       # item_id -> value
-        st.session_state.times = {}           # item_id -> ms
+        st.session_state.responses = {}
+        st.session_state.times = {}
         st.session_state._t0 = None
 
 def start_timer():
@@ -49,14 +49,12 @@ def render_item(item_id):
 
 def compute_adaptive_list():
     r = st.session_state.responses
-    def get(id): return r.get(id, 3)  # neutral if missing
+    def get(id): return r.get(id, 3)
     adaptive = []
-    # Branch rules per schema
     if get("Q1") + get("Q3") >= 8: adaptive.append("Q1a")
     if get("Q11") + get("Q12") >= 8: adaptive.append("Q11a")
     if get("Q21") + get("Q22") >= 8: adaptive.append("Q22a")
-    adaptive.append("Q7a") if "Q7" in r else None
-    # Remove any missing definitions and randomize
+    if "Q7" in r: adaptive.append("Q7a")
     adaptive = [a for a in adaptive if a in ADAPTIVE_IDS]
     random.shuffle(adaptive)
     return adaptive
@@ -66,7 +64,6 @@ def score_all():
     r = st.session_state.responses
     times = st.session_state.times
 
-    # Reverse rule
     def score_item(item_id):
         item = ITEM_MAP[item_id]
         raw = r.get(item_id)
@@ -75,7 +72,6 @@ def score_all():
             return 6 - raw
         return raw
 
-    # Build domain scores
     domains = {d: [] for d in s["scoring"]["domain_mapping"].keys()}
     for domain, ids in s["scoring"]["domain_mapping"].items():
         for qid in ids:
@@ -84,7 +80,6 @@ def score_all():
                 if sc is not None:
                     domains[domain].append(sc)
 
-    # Normalize to domain_max (per schema)
     domain_max = s["scoring"]["computation"]["domain_max"]
     domain_scores = {}
     for d, vals in domains.items():
@@ -94,11 +89,9 @@ def score_all():
         max_per_item = 5.0
         domain_scores[d] = domain_max * (sum(vals) / (max_per_item * len(vals)))
 
-    total_index = sum(domain_scores.values())  # max 100
+    total_index = sum(domain_scores.values())
 
-    # Confidence / integrity penalties
     conf = 1.0
-    # Integrity extremes
     integ = s["scoring"]["integrity_logic"]["penalize_extremes"]
     penalty_per_extreme = float(integ["penalty_per_extreme"])
     extreme_values = set(integ["extreme_values"])
@@ -109,7 +102,6 @@ def score_all():
             extreme_count += 1
     conf -= penalty_per_extreme * extreme_count
 
-    # Time-based
     tlogic = s["scoring"]["integrity_logic"]["time_based_flags"]
     min_ms = int(tlogic["min_ms_per_item"])
     penalty_time = float(tlogic["penalty"])
@@ -117,7 +109,6 @@ def score_all():
     if len(times) > 0 and len(too_fast) / len(times) >= float(tlogic["rapid_threshold_pct"]):
         conf -= penalty_time
 
-    # Consistency mirrors
     mirrors = s["scoring"]["consistency_checks"]["mirrors"]
     allowable = int(s["scoring"]["consistency_checks"]["allowable_deviation"])
     per_violation = float(s["scoring"]["consistency_checks"]["penalty_per_violation"])
@@ -126,18 +117,14 @@ def score_all():
         if a in r and b in r:
             if abs(r[a] - r[b]) > allowable:
                 violations += 1
-    conf -= per_violation * violations
+    conf = max(0.0, min(1.0, 1.0 - per_violation * violations + (conf - 1.0)))
 
-    conf = max(0.0, min(1.0, conf))
-
-    # Confidence label
     label = "Low"
     for lvl in s["scoring"]["computation"]["confidence_levels"]:
         if conf >= lvl["min_conf"]:
             label = lvl["label"]
             break
 
-    # Cutpoint label for total score
     cut_label = "Unscored"
     for cut in s["scoring"]["cutpoints"]:
         lo, hi = cut["range"]
@@ -175,7 +162,6 @@ if st.session_state.phase == "intro":
         start_timer()
     st.stop()
 
-# Navigation helpers
 def next_item(curr_id):
     stop_timer(curr_id)
     st.session_state.idx += 1
@@ -185,16 +171,14 @@ def prev_item():
     st.session_state.idx = max(0, st.session_state.idx - 1)
     start_timer()
 
-# CORE PHASE
 if st.session_state.phase == "core":
     order = st.session_state.order_core
     if st.session_state.idx >= len(order):
-        # Compute adaptive list
         st.session_state.order_adaptive = compute_adaptive_list()
         st.session_state.phase = "adaptive" if st.session_state.order_adaptive else "integrity"
         st.session_state.idx = 0
         start_timer()
-        st.experimental_rerun()
+        st.rerun()
 
     curr_id = order[st.session_state.idx]
     st.subheader(f"Core item {st.session_state.idx+1} of {len(order)}")
@@ -203,24 +187,23 @@ if st.session_state.phase == "core":
     with cols[0]:
         if st.session_state.idx > 0 and st.button("Back"):
             prev_item()
-            st.experimental_rerun()
+            st.rerun()
     with cols[1]:
         if st.button("Next ▶"):
             if curr_id not in st.session_state.responses:
                 st.warning("Please select a response to continue.")
             else:
                 next_item(curr_id)
-                st.experimental_rerun()
+                st.rerun()
     st.stop()
 
-# ADAPTIVE PHASE
 if st.session_state.phase == "adaptive":
     order = st.session_state.order_adaptive
     if st.session_state.idx >= len(order):
         st.session_state.phase = "integrity"
         st.session_state.idx = 0
         start_timer()
-        st.experimental_rerun()
+        st.rerun()
 
     curr_id = order[st.session_state.idx]
     st.subheader(f"Adaptive item {st.session_state.idx+1} of {len(order)}")
@@ -229,30 +212,27 @@ if st.session_state.phase == "adaptive":
     with cols[0]:
         if st.session_state.idx > 0 and st.button("Back"):
             prev_item()
-            st.experimental_rerun()
+            st.rerun()
     with cols[1]:
         if st.button("Next ▶"):
             next_item(curr_id)
-            st.experimental_rerun()
+            st.rerun()
     st.stop()
 
-# INTEGRITY PHASE
 if st.session_state.phase == "integrity":
     order = st.session_state.order_integrity
     if st.session_state.idx >= len(order):
         st.session_state.phase = "results"
-        st.experimental_rerun()
-
+        st.rerun()
     else:
         curr_id = order[st.session_state.idx]
         st.subheader(f"Integrity item {st.session_state.idx+1} of {len(order)}")
         render_item(curr_id)
         if st.button("Next ▶"):
             next_item(curr_id)
-            st.experimental_rerun()
+            st.rerun()
     st.stop()
 
-# RESULTS PHASE
 if st.session_state.phase == "results":
     results = score_all()
     st.success("Completed. Here are your results:")
@@ -275,4 +255,4 @@ if st.session_state.phase == "results":
         for k in list(st.session_state.keys()):
             del st.session_state[k]
         init_state()
-        st.experimental_rerun()
+        st.rerun()
